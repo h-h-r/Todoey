@@ -7,38 +7,42 @@
 //
 
 import UIKit
+//import Item
 
 class TodoListViewController: UITableViewController  {
 
     
     var itemArray = [Item]()
     
-    let defaults = UserDefaults.standard
+//    let defaults = UserDefaults.standard
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        print( NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String )
+        
+        //print( NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String )
         //go check library/prefernce for persistant data plist
-//        if let items = defaults.array(forKey: "TodoListArray") as? [String]{
+
+        print("???",self.dataFilePath!)
+        
+//        let newItem = Item()
+//        newItem.title = "Find a"
+//        self.itemArray.append(newItem)
+//        
+//        let newItem2 = Item()
+//        newItem2.title = "Find b"
+//        self.itemArray.append(newItem2)
+//        
+//        let newItem3 = Item()
+//        newItem3.title = "Find c"
+//        self.itemArray.append(newItem3)
+        
+//        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
 //            self.itemArray = items
 //        }
-        let newItem = Item()
-        newItem.title = "Find a"
-        self.itemArray.append(newItem)
-        
-        let newItem2 = Item()
-        newItem2.title = "Find b"
-        self.itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "Find c"
-        self.itemArray.append(newItem3)
-        
-        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
-            self.itemArray = items
-        }
 
-
+        loadItems()
 
     }
 
@@ -60,13 +64,8 @@ class TodoListViewController: UITableViewController  {
 //        print(itemArray[indexPath.row])
         
         self.itemArray[indexPath.row].done = !self.itemArray[indexPath.row].done
-        
-        tableView.reloadData()
-//        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark{
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-//        }else{
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-//        }
+        saveItems()
+
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -83,8 +82,18 @@ class TodoListViewController: UITableViewController  {
             newItem.title = textField.text!
             
             self.itemArray.append(newItem)
-            self.defaults.set(self.itemArray, forKey: "TodoListArray")
-            self.tableView.reloadData()
+            
+//            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+//            let encoder = PropertyListEncoder()
+//            do{
+//                let data = try encoder.encode(self.itemArray)
+//                try data.write(to: self.dataFilePath!)
+//            }catch {
+//                print("error encoding error: \(error)")
+//            }
+//            self.tableView.reloadData()
+            
+            self.saveItems()
         }
         alert.addAction(action)
         alert.addTextField { (alertTextField) in
@@ -95,10 +104,27 @@ class TodoListViewController: UITableViewController  {
 //        present(
     }
     
+    func saveItems(){
+        let encoder = PropertyListEncoder()
+        do{
+            let data = try encoder.encode(self.itemArray)
+            try data.write(to: self.dataFilePath!)
+        }catch {
+            print("error encoding error: \(error)")
+        }
+        self.tableView.reloadData()
+    }
     
-    
-    
-    
+    func loadItems(){
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder =  PropertyListDecoder()
+            do {
+                self.itemArray = try decoder.decode([Item].self, from: data)
+            } catch{
+                print("decoding error: \(error)")
+            }
+        }
+    }
     
     
 }
