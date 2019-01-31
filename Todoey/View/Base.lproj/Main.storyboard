@@ -35,7 +35,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="wCf-PD-QbX">
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <action selector="addButtonPressed:" destination="fZP-SD-H5p" id="2Bq-IB-7I4"/>
+                                <action selector="addButtonPressed:" destination="fZP-SD-H5p" id="MeQ-9M-2Tf"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
