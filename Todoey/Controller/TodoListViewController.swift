@@ -98,7 +98,6 @@ class TodoListViewController: UITableViewController  {
             textField = alertTextField
         }
         self.present(alert,animated: true, completion: nil)
-//        present(
     }
     
 
@@ -107,7 +106,6 @@ class TodoListViewController: UITableViewController  {
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
     }
-//
     
 }
 
