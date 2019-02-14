@@ -9,13 +9,14 @@
 import UIKit
 import RealmSwift
 
-class CategoryViewController: UITableViewController {
+class CategoryViewController: SwipeTableTableViewController{
     
     let realm = try! Realm()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         loadCategories()
+        tableView.rowHeight = 80
         print("!!!",self.dataFilePath)
     }
     
@@ -24,11 +25,20 @@ class CategoryViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    
+    override func updateModel(at indexPath: IndexPath) {
+        if let categoryForDeletion = self.categoryArray?[indexPath.row]{
+            do{
+                try self.realm.write {
+                    self.realm.delete(categoryForDeletion)
+                }
+            }catch{
+                print("error deleting category, \(error)")
+            }
+        }
+    }
     var categoryArray : Results<Category>?
     
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Items.plist")
-    
     
     //MARK: - Table view data source methods
     
@@ -37,23 +47,16 @@ class CategoryViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
-//        print("xxx: ",indexPath.row)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "No catogory added yet"
-//        cell.accessoryType = self.categoryArray[indexPath.row].done == true ? .checkmark : .none
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         performSegue(withIdentifier: "goToItems", sender: self)
-        
-        
-        
-//        self.categoryArray[indexPath.row].done = !self.categoryArray[indexPath.row].done
-//        saveCategories()
-//        tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationVC = segue.destination as! TodoListViewController
         
@@ -102,4 +105,5 @@ class CategoryViewController: UITableViewController {
 
 }
 
-//extension CategoryViewController :
+//MARK: - extension CategoryViewController :
+
