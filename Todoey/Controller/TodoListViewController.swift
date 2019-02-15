@@ -34,10 +34,6 @@ class TodoListViewController : SwipeTableTableViewController{
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-//        guard let originalColor = UIColor(hexString: "1D9BF6") else{fatalError()}
-//        navigationController?.navigationBar.barTintColor = originalColor
-//        navigationController?.navigationBar.tintColor = FlatWhite()
-//        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor:FlatWhite()]
         updateNavBar(withHexCode: "1D9BF6")
     }
     

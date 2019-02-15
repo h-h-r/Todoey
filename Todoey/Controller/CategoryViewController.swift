@@ -108,11 +108,6 @@ class CategoryViewController: SwipeTableTableViewController{
         self.tableView.reloadData()
     }
     
-    
-    //MARK: - Table view delegate methods
-    
-
-
 }
 
 //MARK: - extension CategoryViewController :
